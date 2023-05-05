@@ -1,0 +1,26 @@
+---
+
+all:
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+    ansible_user: ubuntu
+    ansible_become_password: ubuntu
+  children:
+    kube_cluster:
+      vars:
+        kube_version: v1.26.4
+        cluster_cidr: "172.10.0.0/22"
+        service_cidr: "172.10.0.0/24"
+        tls_sans:
+          - 10.10.10.21
+          - 10.10.10.20
+          - vrrip.k8s.greenhill.lab.home
+      children:
+        master:
+          hosts:
+            master-01: 10.10.10.21
+        node:
+          hosts:
+            worker-01: 10.10.10.22
+            worker-02: 10.10.10.23
+
