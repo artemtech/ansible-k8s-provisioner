@@ -1,0 +1,45 @@
+--- 
+
+- include: apt.yaml
+  when: ansible_distribution in ["Ubuntu", "Debian"]
+
+- name: Ensure /etc/apt/keyrings folder is exists
+  file:
+    path: /etc/apt/keyrings
+    state: directory
+
+- name: Install required packages before installing containerd
+  apt:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - curl
+    - ca-certificates
+    - gnupg
+  when: ansible_distribution in ["Ubuntu", "Debian"]
+
+- name: Import docker gpg first
+  shell: 
+    cmd: curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor --yes -o /etc/apt/keyrings/docker.gpg
+    creates: /etc/apt/keyrings/docker.gpg
+
+- name: Add docker repository
+  apt_repository:
+    filename: docker-repo
+    repo: 'deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu jammy stable'
+
+- name: Install containerd from docker repo
+  apt:
+    name: containerd.io
+    state: present
+
+- name: Initialize containerd configuration
+  template:
+    src: "containerd.toml.j2"
+    dest: "/etc/containerd/containerd.toml"
+
+- name: Restarting containerd service
+  systemd:
+    name: containerd
+    state: restarted
+    enabled: yes

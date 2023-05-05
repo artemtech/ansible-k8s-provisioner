@@ -1,0 +1,3 @@
+---
+sandbox_image: "registry.k8s.io/pause:3.6"
+use_systemdcgroup: yes
