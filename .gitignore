@@ -1,3 +1,5 @@
 artifacts
 .ansible
 password.txt
+inventory.yaml
+./hosts*
