@@ -1,3 +1,7 @@
 ---
-- include: preconfig.yaml
-- include: containerd.yaml
+- name: Preconfigure Machine
+  include: preconfig.yaml
+- name: Installing Containerd
+  include: containerd.yaml
+- name: Installing kubeadm
+  include: kubeadm.yaml
