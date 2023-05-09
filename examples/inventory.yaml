@@ -8,7 +8,7 @@ all:
   children:
     kube_cluster:
       vars:
-        kube_version: v1.26.4
+        kube_version: 1.26.4
         cluster_cidr: "172.10.0.0/22"
         service_cidr: "172.10.0.0/24"
         tls_sans:
