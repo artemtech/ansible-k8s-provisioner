@@ -122,11 +122,11 @@ version = 2
             NoPivotRoot = false
             Root = ""
             ShimCgroup = ""
-          {% if use_systemdcgroup %}
+{% if use_systemdcgroup %}
             SystemdCgroup = true
-          {% else %}
+{% else %}
             SystemdCgroup = false
-          {% endif %}
+{% endif %}
 
       [plugins."io.containerd.grpc.v1.cri".containerd.untrusted_workload_runtime]
         base_runtime_spec = ""
