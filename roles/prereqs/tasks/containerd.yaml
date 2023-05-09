@@ -16,6 +16,7 @@
     - curl
     - ca-certificates
     - gnupg
+    - apt-transport-https
   when: ansible_distribution in ["Ubuntu", "Debian"]
 
 - name: Import docker gpg first
@@ -36,10 +37,12 @@
 - name: Initialize containerd configuration
   template:
     src: "containerd.toml.j2"
-    dest: "/etc/containerd/containerd.toml"
+    dest: "/etc/containerd/config.toml"
+  register: containerd_cfg_status
 
 - name: Restarting containerd service
   systemd:
     name: containerd
     state: restarted
     enabled: yes
+  when: containerd_cfg_status.changed
