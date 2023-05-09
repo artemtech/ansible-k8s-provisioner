@@ -1,0 +1,17 @@
+apiVersion: kubeadm.k8s.io/v1beta3
+clusterName: "{{ kube_cluster_name }}"
+imageRepository: "{{ main_image_repository }}"
+kind: ClusterConfiguration
+kubernetesVersion: "{{ kube_version }}"
+controlPlaneEndpoint: "{{ kube_controlplane_endpoint }}"
+networking:
+  dnsDomain: "{{ kube_dns_domain }}"
+  serviceSubnet: "{{ kube_service_cidr }}"
+  podSubnet: "{{ kube_cluster_cidr }}"
+apiServer:
+  extraArgs:
+    authorization-mode: "Node,RBAC"
+  certSANs:
+{% for ip in kube_tls_sans %}
+    - "{{ip}}"
+{% endfor %}

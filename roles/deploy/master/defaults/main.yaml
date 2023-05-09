@@ -1,0 +1,12 @@
+main_image_repository: registry.k8s.io
+kube_dns_domain: cluster.local
+kube_cluster_name: kubernetes
+kube_service_cidr: "10.96.0.0/12"
+kube_cluster_cidr: "10.0.0.0/8"
+kube_controlplane_endpoint: "{{ ansible_host }}:6443"
+kube_tls_sans:
+  - 10.10.10.21
+  - 10.10.10.20
+  - 10.10.10.22
+  - 10.10.10.23
+  - vrrip.k8s.artemtech.lab.home

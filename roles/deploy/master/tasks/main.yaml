@@ -1,0 +1,38 @@
+---
+
+- name: transfer kubeadm config file
+  template:
+    src: kubeadm-config.yaml.j2
+    dest: "${HOME}/.kubeadm-config.yaml"
+    mode: 0644
+
+- name: check if already bootstrapped
+  shell:
+    cmd: "ss -tpln | grep 6443"
+  register: port_result
+
+- name: bootstrap cluster
+  shell:
+    cmd: "kubeadm init --config {{ansible_env.HOME}}/.kubeadm-config.yaml"
+  register: bootstrap_result
+  become: true
+  when: port_result.stdout.find('6443') == -1
+
+- name: prepare kubeadm config dir
+  file:
+    path: "{{ansible_env.HOME}}/.kube"
+    state: directory
+
+- name: copy kubeadm
+  copy:
+    src: /etc/kubernetes/admin.conf
+    dest: "{{ ansible_env.HOME }}/.kube/config"
+    remote_src: true
+    owner: "{{ ansible_user }}"
+  become: true
+
+- name: enable kubectl completion
+  lineinfile:
+    line: "source <(kubectl completion bash)"
+    path: "{{ ansible_env.HOME }}/.bashrc"
+    
